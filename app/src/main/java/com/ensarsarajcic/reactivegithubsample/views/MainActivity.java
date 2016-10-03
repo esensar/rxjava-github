@@ -107,8 +107,14 @@ public class MainActivity extends AppCompatActivity {
                             return RestClient.getGitHubApi().getUsers(new Random().nextInt(1000)).execute().body();
                         } catch (IOException ioException) {
                             ioException.printStackTrace();
-                            return new ArrayList<GitHubUser>();
+                            return null;
                         }
+                    }
+                })
+                .filter(new Func1<List<GitHubUser>, Boolean>() {
+                    @Override
+                    public Boolean call(List<GitHubUser> gitHubUsers) {
+                        return gitHubUsers != null;
                     }
                 })
                 .subscribeOn(Schedulers.io()).
@@ -121,12 +127,10 @@ public class MainActivity extends AppCompatActivity {
             public void onCompleted() {
 
             }
-
             @Override
             public void onError(Throwable e) {
                 e.printStackTrace();
             }
-
             @Override
             public void onNext(List<GitHubUser> gitHubUsers) {
                 adapter.setItems(gitHubUsers);
