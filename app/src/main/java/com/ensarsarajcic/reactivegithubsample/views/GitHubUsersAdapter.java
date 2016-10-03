@@ -17,12 +17,10 @@ import com.ensarsarajcic.reactivegithubsample.models.GitHubRepo;
 import com.ensarsarajcic.reactivegithubsample.models.GitHubUser;
 import com.ensarsarajcic.reactivegithubsample.network.RestClient;
 import com.jakewharton.rxbinding.view.RxView;
-import com.jakewharton.rxbinding.widget.RxCompoundButton;
-import com.jakewharton.rxbinding.widget.RxTextView;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -99,7 +97,7 @@ public class GitHubUsersAdapter extends RecyclerView.Adapter<GitHubUsersAdapter.
                     public List<GitHubRepo> call(GitHubUser gitHubUser) {
                         try {
                             return RestClient.getGitHubApi().getUserRepos(gitHubUser.getLogin()).execute().body();
-                        } catch (IOException e) {
+                        } catch (Exception e) {
                             e.printStackTrace();
                             Log.e(TAG, "call: ", e);
                             return null;
@@ -115,36 +113,24 @@ public class GitHubUsersAdapter extends RecyclerView.Adapter<GitHubUsersAdapter.
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
 
-//        Observable<Void> randomReposObservable = RxView.clicks(holder.tvRepos).subscribeOn(AndroidSchedulers.mainThread());
-//
-//        compositeSubscription.add(randomReposObservable.subscribe(new Subscriber<Void>() {
-//            @Override
-//            public void onCompleted() {
-//                Log.d(TAG, "onCompleted: ");
-//            }
-//
-//            @Override
-//            public void onError(Throwable e) {
-//                Log.d(TAG, "onError: ");
-//            }
-//
-//            @Override
-//            public void onNext(Void aVoid) {
-//                Log.d(TAG, "onNext: ");
-//            }
-//        }));
-//
-//        Observable<List<GitHubRepo>> gitHubReposObservable = Observable.combineLatest(randomReposObservable, fetchUserReposObservable, new Func2<Void, List<GitHubRepo>, List<GitHubRepo>>() {
-//            @Override
-//            public List<GitHubRepo> call(Void aVoid, List<GitHubRepo> gitHubRepos) {
-//                return gitHubRepos;
-//            }
-//        }).subscribeOn(AndroidSchedulers.mainThread());
+        Observable<Void> randomReposObservable = RxView.clicks(holder.tvRepos)
+                // Very stupid way to just generate a single event because type is void
+                .startWith(Arrays.asList(new Void[]{null}))
+                .subscribeOn(AndroidSchedulers.mainThread());
 
-        Observable<List<String>> repoNamesObservable = fetchUserReposObservable.map(new Func1<List<GitHubRepo>, List<String>>() {
+        Observable<List<GitHubRepo>> gitHubReposObservable = Observable.combineLatest(randomReposObservable, fetchUserReposObservable, new Func2<Void, List<GitHubRepo>, List<GitHubRepo>>() {
             @Override
-            public List<String> call(List<GitHubRepo> gitHubRepos) {
+            public List<GitHubRepo> call(Void aVoid, List<GitHubRepo> gitHubRepos) {
+                return gitHubRepos;
+            }
+        });
+
+        Observable<List<String>> repoNamesObservable = gitHubReposObservable.map(new Func1<List<GitHubRepo>, List<String>>() {
+            @Override
+            public List<String> call(List<GitHubRepo> gitHubReposOriginal) {
                 List<String> names = new ArrayList<String>();
+                List<GitHubRepo> gitHubRepos = new ArrayList<GitHubRepo>();
+                gitHubRepos.addAll(gitHubReposOriginal);
                 for (int i = 0; i < 3; i++) {
                     if(gitHubRepos.isEmpty()) break;
                     int position = new Random().nextInt(gitHubRepos.size());
@@ -154,8 +140,6 @@ public class GitHubUsersAdapter extends RecyclerView.Adapter<GitHubUsersAdapter.
                 return names;
             }
         });
-
-
 
         compositeSubscription.add(fetchImageObservable.subscribe(new Subscriber<Bitmap>() {
             @Override
@@ -204,6 +188,7 @@ public class GitHubUsersAdapter extends RecyclerView.Adapter<GitHubUsersAdapter.
         private TextView tvUserName;
         private TextView tvUserUrl;
         private ListView lvRepos;
+        private TextView tvRepos;
 
         public GitHubUserViewHolder(View itemView) {
             super(itemView);
@@ -211,6 +196,7 @@ public class GitHubUsersAdapter extends RecyclerView.Adapter<GitHubUsersAdapter.
             tvUserName = (TextView) itemView.findViewById(R.id.tvUserName);
             tvUserUrl = (TextView) itemView.findViewById(R.id.tvUserUrl);
             lvRepos = (ListView) itemView.findViewById(R.id.lvRepos);
+            tvRepos = (TextView) itemView.findViewById(R.id.tvRepos);
         }
     }
 

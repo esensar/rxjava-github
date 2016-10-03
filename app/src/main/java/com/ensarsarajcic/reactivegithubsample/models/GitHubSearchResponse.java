@@ -1,7 +1,5 @@
 package com.ensarsarajcic.reactivegithubsample.models;
 
-import com.google.gson.annotations.SerializedName;
-
 import java.util.List;
 
 /**

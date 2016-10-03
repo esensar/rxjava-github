@@ -34,7 +34,11 @@
         android:layout_below="@+id/tvUserUrl"
         android:layout_alignLeft="@+id/tvUserUrl"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorPrimaryDark"
+        android:textAllCaps="true"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="5dp"/>
 
     <ListView
         android:id="@+id/lvRepos"

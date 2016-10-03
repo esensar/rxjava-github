@@ -1,7 +1,5 @@
 package com.ensarsarajcic.reactivegithubsample.models;
 
-import com.google.gson.annotations.SerializedName;
-
 /**
  * Created by ensar on 03/10/16.
  */
