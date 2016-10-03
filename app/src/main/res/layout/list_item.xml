@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="200dp">
+
+    <TextView
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/tvUserName"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="39dp"
+        android:layout_marginEnd="39dp"
+        android:layout_marginTop="29dp"
+        android:textSize="20sp"
+        android:ellipsize="end"
+        android:text="USERNAME"
+        android:textColor="@color/colorPrimary"/>
+
+    <TextView
+        android:id="@+id/tvUserUrl"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:text="https://userurl.com"
+        android:layout_below="@+id/tvUserName"
+        android:layout_alignLeft="@+id/tvUserName"
+        android:layout_alignStart="@+id/tvUserName"
+        android:autoLink="all"/>
+
+    <TextView
+        android:id="@+id/tvRepos"
+        android:text="3 random repos:"
+        android:layout_below="@+id/tvUserUrl"
+        android:layout_alignLeft="@+id/tvUserUrl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <ListView
+        android:id="@+id/lvRepos"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_below="@+id/tvRepos"
+        android:layout_toRightOf="@+id/ivUser"/>
+
+    <ImageView
+        android:id="@+id/ivUser"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:src="@mipmap/ic_launcher"
+        android:layout_marginRight="21dp"
+        android:layout_marginEnd="21dp"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@+id/tvUserName"
+        android:layout_toStartOf="@+id/tvUserName" />
+
+
+</RelativeLayout>
